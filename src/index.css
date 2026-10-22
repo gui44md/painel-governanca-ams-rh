@@ -1,0 +1,115 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+
+/*
+ * Tokens da identidade visual (CONCEITO.md, seção 5).
+ * Os mesmos valores existem em src/config/tema.ts para os gráficos;
+ * o teste tema.test.ts garante que os dois arquivos não divergem.
+ */
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+
+  /* Marca */
+  --color-primaria: #00305e;
+  --color-primaria-escura: #00213f;
+  --color-primaria-media: #2f5a85;
+  --color-primaria-clara: #e6edf5;
+  --color-destaque: #ffc20e;
+  --color-destaque-claro: #fff4cf;
+
+  /* Superfícies e texto */
+  --color-fundo: #f4f6f9;
+  --color-superficie: #ffffff;
+  --color-texto: #1f2933;
+  --color-texto-suave: #52606d;
+  --color-borda: #e1e6ec;
+  --color-menu-texto: #b8c7d9;
+
+  /* Status de SLA: cor base (ícones, barras), texto (≥ 4,5:1) e fundo */
+  --color-no-prazo: #1e9e5a;
+  --color-no-prazo-texto: #146c3e;
+  --color-no-prazo-fundo: #e8f6ee;
+  --color-em-risco: #e8730c;
+  --color-em-risco-texto: #9a4a06;
+  --color-em-risco-fundo: #fdf0e4;
+  --color-estourado: #d64545;
+  --color-estourado-texto: #a62f2f;
+  --color-estourado-fundo: #fbeaea;
+  --color-concluido: #64748b;
+  --color-concluido-texto: #475569;
+  --color-concluido-fundo: #eef1f5;
+
+  /*
+   * Séries categóricas: um matiz fixo por fornecedor, distante das cores de status.
+   * Validado para daltonismo em todos os pares (ΔE ≥ 9,5) e ≥ 3:1 sobre o branco.
+   */
+  --color-fornecedor-alfa: #1c5cab;
+  --color-fornecedor-beta: #c2477a;
+  --color-fornecedor-gama: #7a6a00;
+
+  /* Linhas de grade e eixos dos gráficos */
+  --color-grade: #e9edf2;
+
+  --animate-entrada: entrada 320ms ease-out both;
+
+  @keyframes entrada {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Linha fina em amarelo que lembra trilhos: dois "trilhos" e dormentes discretos. */
+@utility trilho {
+  height: 5px;
+  background:
+    linear-gradient(var(--color-destaque), var(--color-destaque)) top / 100% 1.5px no-repeat,
+    linear-gradient(var(--color-destaque), var(--color-destaque)) bottom / 100% 1.5px no-repeat,
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-destaque) 55%, transparent) 0 2px,
+      transparent 2px 10px
+    );
+}
+
+/* Mesmo trilho na vertical, para a linha do tempo do chamado. */
+@utility trilho-vertical {
+  width: 9px;
+  background:
+    linear-gradient(var(--color-destaque), var(--color-destaque)) left / 1.5px 100% no-repeat,
+    linear-gradient(var(--color-destaque), var(--color-destaque)) right / 1.5px 100% no-repeat,
+    repeating-linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-destaque) 60%, transparent) 0 2px,
+      transparent 2px 9px
+    );
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-fundo font-sans text-texto antialiased;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primaria;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}

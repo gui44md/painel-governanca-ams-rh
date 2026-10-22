@@ -1,0 +1,7 @@
+# Quebras de linha LF em todos os sistemas (Windows, macOS, Linux e o build da Vercel).
+* text=auto eol=lf
+
+# Binários: sem conversão.
+*.pdf binary
+*.xlsx binary
+*.png binary

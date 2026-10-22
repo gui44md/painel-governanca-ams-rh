@@ -1,0 +1,15 @@
+node_modules
+dist
+*.local
+.env
+.env.*
+!.env.example
+.vercel
+*.tsbuildinfo
+.DS_Store
+
+# Logo oficial da MRS: uso restrito à demonstração, não vai para o repositório.
+public/logo-mrs.svg
+
+# Configurações locais de ferramentas
+.claude/
