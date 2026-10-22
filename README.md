@@ -6,6 +6,8 @@ Sistema web que simula a rotina de TI – Sistemas RH: acompanhar os fornecedore
 
 **Pergunta central:** os fornecedores de AMS estão entregando o que o contrato prevê? Onde está o problema e o que vamos fazer sobre ele?
 
+**Demonstração online:** https://gui44md.github.io/painel-governanca-ams-rh/
+
 O insight que a demonstração revela: a Beta Tech tem o melhor SLA (97%), mas 31% dos chamados de Ponto Eletrônico voltam em até 15 dias, porque são encerrados com contorno paliativo, sem corrigir a causa.
 
 ---
@@ -68,7 +70,7 @@ Abra http://localhost:5173.
 
 ### Logo
 
-A logo oficial não vem no repositório. Para exibi-la, salve o arquivo em `public/logo-mrs.svg` (sem alterações). Sem o arquivo, o menu mostra só o nome do sistema.
+A logo oficial não vem no repositório. Para exibi-la, salve em `public/logo-mrs.svg`, sem alterações, a versão amarela publicada na [Sala de Imprensa da MRS](https://www.mrs.com.br/sala-de-imprensa/) (`Logo-amarela.svg`); ela aparece direto sobre o menu azul. Sem o arquivo, o menu mostra só o nome do sistema.
 
 ### Scripts
 
@@ -117,70 +119,51 @@ src/
 scripts/         resumo dos dados e geração das planilhas de exemplo
 docs/            conceito, regras de negócio e roteiro de demonstração
 public/exemplos/ planilhas de exemplo (limpa e com erros)
+.github/         workflow de publicação no GitHub Pages
 ```
 
 ---
 
-## Publicar na Vercel
+## Publicação
 
-O projeto já está pronto para a Vercel: o `vercel.json` faz todas as rotas abrirem a aplicação (SPA) e pede para buscadores não indexarem o site.
+O painel está publicado no **GitHub Pages**:
 
-> **Atenção à logo:** o conceito restringe o uso da logo da MRS à demonstração na entrevista. **Não publique o sistema com a logo em um link aberto** sem autorização da empresa. Para um link público, publique sem a logo (variável `VITE_OCULTAR_LOGO`, abaixo) ou mantenha o link restrito.
+**https://gui44md.github.io/painel-governanca-ams-rh/**
 
-### 1. Enviar o código para o GitHub
+O site público sai **sem a logo**: o arquivo `public/logo-mrs.svg` fica fora do repositório (`.gitignore`) e o build do Pages usa `VITE_OCULTAR_LOGO=true`. Assim o uso da logo continua restrito à demonstração local, como pede o conceito. A página também pede para buscadores não a indexarem.
 
-Crie um repositório (de preferência **privado**) e envie o projeto. Com a [GitHub CLI](https://cli.github.com/):
+### Como funciona
+
+O workflow [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml) roda a cada `git push` na `main` (ou manualmente, em **Actions → Publicar no GitHub Pages → Run workflow**):
+
+1. instala as dependências e roda `lint` e testes;
+2. gera o build com `CAMINHO_BASE=/painel-governanca-ams-rh/`, o prefixo do site no Pages (`vite.config.ts` usa como `base` e o roteador como `basename`);
+3. copia `index.html` para `404.html`, para que links diretos como `/chamados` abram a aplicação;
+4. publica a pasta `dist`.
+
+Para repetir em outro repositório: em **Settings → Pages**, escolha **Source: GitHub Actions**. No plano gratuito do GitHub, o Pages exige repositório público.
+
+Para conferir o build do Pages na sua máquina (no PowerShell, defina antes `$env:CAMINHO_BASE = '/painel-governanca-ams-rh/'`; no Git Bash, prefixe `MSYS_NO_PATHCONV=1` para o caminho não ser convertido):
 
 ```bash
-git init
+CAMINHO_BASE=/painel-governanca-ams-rh/ npm run build
 ```
 
 ```bash
-git add .
+CAMINHO_BASE=/painel-governanca-ams-rh/ npm run preview
 ```
 
-```bash
-git commit -m "Painel de Governança AMS – Sistemas RH"
-```
+### Alternativa: Vercel
 
-```bash
-gh repo create painel-governanca-ams-rh --private --source=. --push
-```
-
-O arquivo `public/logo-mrs.svg` não deve ir para um repositório público. Se for o caso, acrescente a linha `public/logo-mrs.svg` ao `.gitignore` antes do commit.
-
-### 2. Importar na Vercel
+Útil para manter o repositório privado. O `vercel.json` já faz todas as rotas abrirem a aplicação (SPA) e pede para buscadores não indexarem o site.
 
 1. Entre em [vercel.com](https://vercel.com) com a conta do GitHub.
 2. **Add New… → Project** e escolha o repositório.
-3. A Vercel detecta **Vite** sozinha. Confira:
-   - Build Command: `npm run build`
-   - Output Directory: `dist`
-   - Install Command: `npm install`
-4. Para publicar **sem a logo**, em **Environment Variables** adicione `VITE_OCULTAR_LOGO` = `true`.
-5. Clique em **Deploy**. Em cerca de 1 minuto a Vercel mostra o link `https://<projeto>.vercel.app`.
+3. A Vercel detecta **Vite** sozinha (build `npm run build`, saída `dist`). Não defina `CAMINHO_BASE`: na Vercel o site fica na raiz.
+4. Em **Environment Variables**, adicione `VITE_OCULTAR_LOGO` = `true` para publicar sem a logo.
+5. Clique em **Deploy**. A cada `git push` na `main`, a Vercel publica uma nova versão.
 
-A cada `git push` na branch principal, a Vercel publica uma nova versão.
-
-### Alternativa: pela linha de comando
-
-```bash
-npm install -g vercel
-```
-
-```bash
-vercel
-```
-
-```bash
-vercel --prod
-```
-
-O primeiro `vercel` faz login, liga a pasta a um projeto e publica uma prévia; `vercel --prod` publica a versão de produção.
-
-### Restringir o acesso
-
-Para mostrar o sistema só a quem tiver o link certo, use **Settings → Deployment Protection** na Vercel. As opções disponíveis variam conforme o plano; confira na documentação da Vercel antes de compartilhar.
+Para mostrar o sistema só a quem tiver o link certo, use **Settings → Deployment Protection** na Vercel (as opções variam conforme o plano).
 
 ---
 

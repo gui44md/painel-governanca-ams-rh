@@ -5,6 +5,8 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
+  // No GitHub Pages o site fica em /<repositório>/; o workflow de deploy define CAMINHO_BASE.
+  base: process.env.CAMINHO_BASE ?? '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

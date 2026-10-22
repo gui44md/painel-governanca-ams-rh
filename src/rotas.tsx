@@ -13,6 +13,9 @@ const sobDemanda =
   (importar: () => ModuloPagina): RouteObject['lazy'] =>
   async () => ({ Component: (await importar()).default })
 
+/** Prefixo do site (ex.: /painel-governanca-ams-rh no GitHub Pages), sem a barra final. */
+const CAMINHO_BASE = import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
+
 export const roteador = createBrowserRouter([
   {
     Component: LayoutApp,
@@ -36,4 +39,4 @@ export const roteador = createBrowserRouter([
       },
     ],
   },
-])
+], { basename: CAMINHO_BASE })
